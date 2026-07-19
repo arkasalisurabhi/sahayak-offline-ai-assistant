@@ -10,6 +10,7 @@ import requests
 from openwakeword.model import Model
 from faster_whisper import WhisperModel
 import ollama
+import re as re_module
 
 # ---------- Config ----------
 SAMPLE_RATE = 16000
@@ -48,7 +49,7 @@ def record_command(duration=5):
 
 def transcribe_command():
     print("DEBUG: starting transcription", flush=True)
-    segments, info = whisperModel.transcribe(COMMAND_PATH, beam_size=5)
+    segments, info = whisperModel.transcribe(COMMAND_PATH, beam_size=10)
     text = "".join(segment.text for segment in segments).strip()
     detected_lang = info.language
     print(f"You said: {text} (language: {detected_lang}, confidence: {info.language_probability:.2f})", flush=True)
@@ -103,7 +104,8 @@ def route_skill(user_text):
 
     time_words = ["time", "समय", "टाइम"]
     date_words = ["date", "तारीख", "दिनांक", "what day"]
-    weather_words = ["weather", "temperature", "how hot", "how cold", "मौसम", "मोसम", "तापमान"]
+    weather_words = ["weather", "temperature", "how hot", "how cold", "मौस", "मोस", "मोसम", "मौसम", "तापमान"]
+    weather_pattern = re_module.compile(r'[मौमोमु]स्?स?म')
 
     if any(word in text for word in time_words):
         return skill_time(user_text)
@@ -111,7 +113,7 @@ def route_skill(user_text):
     if any(word in text for word in date_words):
         return skill_date(user_text)
 
-    if any(word in text for word in weather_words):
+    if any(word in text for word in weather_words) or weather_pattern.search(text):
         return skill_weather(user_text)
 
     if any(phrase in text for phrase in ["plus", "minus", "times", "multiplied", "divided", "+", "-", "*", "/"]) and any(char.isdigit() for char in text):

@@ -1,4 +1,4 @@
-\# Jarvis-Lite: A Locally-Run Conversational Voice Assistant
+\#  Sahayak — Offline AI Voice Assistant 
 
 
 
