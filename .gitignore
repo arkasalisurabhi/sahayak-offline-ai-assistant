@@ -1,0 +1,13 @@
+venv/
+models/
+logs/
+ffmpeg/
+ollama/
+.cache/
+__pycache__/
+*.pyc
+*.wav
+*.onnx
+*.onnx.json
+.env
+
